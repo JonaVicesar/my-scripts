@@ -1,0 +1,13 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+echo -e "${C_AZUL}Updating system and global packages...${C_RESET}"
+
+echo -e "${C_VERDE}1. Updating system packages (APT)...${C_RESET}"
+sudo apt update && sudo apt upgrade -y
+
+echo -e "${C_VERDE}2. Updating global NPM packages...${C_RESET}"
+# this updates tools like nodemon or linters that you use globally
+npm update -g
+
+echo -e "${C_CELESTE}System and tools up to date{C_RESET}"

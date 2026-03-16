@@ -1,0 +1,6 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+echo -e "${C_CELESTE}WiFi Password:${C_RESET}"
+
+nmcli dev wifi show-password

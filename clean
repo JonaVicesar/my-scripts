@@ -1,0 +1,20 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+echo -e "${C_AZUL}--- Iniciando limpieza del sistema ---${C_RESET}"
+
+echo -e "${C_VERDE}Cleaning CACHE and RAM...${C_RESET}"
+
+sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches > /dev/null
+sudo swapoff -a && sudo swapon -a
+
+echo -e "${C_VERDE}Cleaning APT and temp files...${C_RESET}"
+sudo apt autoremove --purge -y && sudo apt autoclean && sudo apt clean
+rm -rf ~/.cache/thumbnails/*
+
+#  clean the trash
+echo -e "${C_VERDE}Emptying Trash...${C_RESET}"
+sudo rm -rf ~/.local/share/Trash/*
+
+echo -e "${C_CELESTE}Memory Usage:${C_RESET}"
+free -h

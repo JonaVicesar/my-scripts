@@ -1,0 +1,9 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+echo -e "${C_VERDE}IP Local:${C_RESET}"
+hostname -I | awk '{print $1}'
+
+echo -e "${C_CELESTE}IP Public:${C_RESET}"
+curl -s https://ifconfig.me
+echo "" # Salto de línea

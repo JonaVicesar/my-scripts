@@ -1,0 +1,14 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+# route to the python .venv
+PYTHON_VENV="$HOME/scripts/Python/.venv/bin/python3"
+
+DOWNLOAD_DIR="$HOME/Downloads/YoutubeMusic"
+mkdir -p "$DOWNLOAD_DIR"
+cd "$DOWNLOAD_DIR"
+
+echo -e "${C_VERDE}[✓] Descargando contenido...${C_RESET}"
+
+# route to the python script that downloads the youtube song
+$PYTHON_VENV "$HOME/scripts/Python/youtube_downloader.py" "$@"

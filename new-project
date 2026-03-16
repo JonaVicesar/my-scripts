@@ -1,0 +1,75 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+# define the project name
+if [ -z "$1" ]; then
+    echo -e "${C_ROJO}Error: Give a name to the project.${C_RESET}"
+    echo -e "Usage: new-project <project-name>"
+    exit 1
+fi
+
+NAME=$1
+
+# path to the project
+echo -e "${C_AZUL}Where do you want to save this project?${C_RESET}"
+echo -e "1) UNI"
+echo -e "2) Trabajo"
+echo -e "3) Proyectos Personales"
+read -p "Option (1-3): " CTX_OPT
+
+case $CTX_OPT in
+    1) BASE_DIR="$HOME/UNI" ;;
+    2) BASE_DIR="$HOME/Trabajo" ;;
+    3) BASE_DIR="$HOME/Proyectos Personales" ;;
+    *) echo -e "${C_ROJO}Invalid option.${C_RESET}"; exit 1 ;;
+esac
+
+# language/framework
+echo -e "\n${C_AZUL}What type of project is this?${C_RESET}"
+echo -e "c, python, react, node, html"
+read -p "Type: " TYPE
+
+PROJECT_PATH="$BASE_DIR/$NAME"
+mkdir -p "$PROJECT_PATH"
+cd "$PROJECT_PATH"
+
+# -project setup
+echo -e "\n${C_CELESTE}Setting up project...${C_RESET}"
+
+case $TYPE in
+    c)
+        mkdir -p src include
+        echo -e "#include <stdio.h>\n\nint main() {\n    printf(\"Hola desde $NAME\\\n\");\n    return 0;\n}" > src/main.c
+        touch Makefile
+        ;;
+    python)
+        mkdir src tests
+        python3 -m venv .venv
+        echo -e "node_modules/\n.venv/\n__pycache__/" > .gitignore
+        ;;
+    react)
+        npm create vite@latest . -- --template react
+        npm install
+        ;;
+    node)
+        npm init -y
+        mkdir src && touch src/index.js
+        echo "node_modules/" > .gitignore
+        ;;
+    html)
+        mkdir css js img
+        echo -e "<!DOCTYPE html>\n<html>\n<head>\n<title>$NAME</title>\n</head>\n<body>\n<h1>Proyecto: $NAME</h1>\n</body>\n</html>" > index.html
+        ;;
+    *)
+        echo -e "${C_ROJO}Unknown type, only folder will be created.${C_RESET}"
+        ;;
+esac
+
+# basic README
+echo -e "# $NAME\n\n- **Date:** $(date +'%d/%m/%Y')\n- **Context:** $BASE_DIR\n- **Type:** $TYPE" > README.md
+
+git init > /dev/null
+echo -e "${C_VERDE}Project $NAME created successfully in $BASE_DIR!${C_RESET}"
+
+# open the project in vscode
+code .

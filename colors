@@ -1,0 +1,7 @@
+# colors
+export C_RESET='\033[0m'
+export C_VERDE='\033[0;32m'
+export C_AZUL='\033[0;34m'
+export C_CELESTE='\033[0;36m'
+export C_ROJO='\033[0;31m'
+export C_BLANCO='\033[1;37m'

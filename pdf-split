@@ -1,0 +1,7 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+PYTHON_VENV="$HOME/scripts/Python/.venv/bin/python3"
+
+echo -e "${C_AZUL}Splitting PDF...${C_RESET}"
+
+$PYTHON_VENV "$HOME/scripts/Python/pdf-separator.py" "$@"

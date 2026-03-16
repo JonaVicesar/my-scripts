@@ -1,0 +1,30 @@
+#!/bin/bash
+source "$HOME/scripts/colors"
+
+DOWNLOADS_DIR="$HOME/Downloads"
+echo -e "${C_AZUL}Organizing Downloads folder...${C_RESET}"
+
+# create new folders if they don't exist
+mkdir -p "$DOWNLOADS_DIR/Documents" "$DOWNLOADS_DIR/Excel, csv" "$DOWNLOADS_DIR/Music" \
+         "$DOWNLOADS_DIR/Development" "$DOWNLOADS_DIR/Images" "$DOWNLOADS_DIR/Videos" \
+         "$DOWNLOADS_DIR/Compressed" "$DOWNLOADS_DIR/Programs"
+
+# text documents (PDF, Word, PowerPoint, Pages)
+mv -f "$DOWNLOADS_DIR"/*.{pdf,docx,doc,pptx,pages} "$DOWNLOADS_DIR/Documents/" 2>/dev/null
+
+# csv/excel files
+mv -f "$DOWNLOADS_DIR"/*.{xlsx,xls,csv} "$DOWNLOADS_DIR/Excel, csv/" 2>/dev/null
+
+# media files audio, video and images
+mv -f "$DOWNLOADS_DIR"/*.{mp3,wav,m4a} "$DOWNLOADS_DIR/Music/" 2>/dev/null
+mv -f "$DOWNLOADS_DIR"/*.{jpg,jpeg,png,gif,webp,svg} "$DOWNLOADS_DIR/Images/" 2>/dev/null
+mv -f "$DOWNLOADS_DIR"/*.{mp4,mkv,avi,mov,AVI} "$DOWNLOADS_DIR/Videos/" 2>/dev/null
+
+# html, har, json, log files (dev related)
+mv -f "$DOWNLOADS_DIR"/*.{html,har,json,log} "$DOWNLOADS_DIR/Development/" 2>/dev/null
+
+# installers and compressed files
+mv -f "$DOWNLOADS_DIR"/*.{zip,tar,gz,rar,7z} "$DOWNLOADS_DIR/Compressed/" 2>/dev/null
+mv -f "$DOWNLOADS_DIR"/*.{deb,iso,sh,exe,apk} "$DOWNLOADS_DIR/Programs/" 2>/dev/null
+
+echo -e "${C_VERDE}Downloads folder organized successfully!${C_RESET}"
