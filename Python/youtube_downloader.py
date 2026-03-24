@@ -2,7 +2,7 @@
 import yt_dlp
 import argparse
 import sys
-
+import re #regex
 
 def loader(d):
 
@@ -23,6 +23,33 @@ def loader(d):
     elif d['status'] == 'finished':
         print('\nDownload finished!')
 
+def filter_message(msg):
+    #ignore normal download messages
+    if any(x in msg for x in [
+        '[download]',
+        'Download finished',
+        '[youtube] Downloading webpage',
+        '[youtube] Downloading android vr player',
+        '[youtube] Downloading player',
+        'No supported JavaScript runtime',
+        'YouTube extraction without a JS runtime',
+        '[info] Downloading 1 format',
+        '[ExtractAudio]',
+    ]):
+        return
+    
+    #if it's a regional or blocked by country error, show a message
+    if 'not made this video available' in msg:
+        match = re.search(r'\[youtube\] ([a-zA-Z0-9_-]+):', msg)
+        if match:
+            video_id = match.group(1) #get video id
+            print(f"\nSkipping the video: ({video_id})")
+        return
+    
+    # show other messages
+    if msg and not msg.strip().startswith('[youtube]'):
+        print(msg)
+
 
 def download_audio(url, quality='192'):
     print(f"Starting download for: {url}")
@@ -36,16 +63,29 @@ def download_audio(url, quality='192'):
         }],
         'outtmpl': '%(title)s.%(ext)s',
         'noplaylist': True,  # avoid downloading entire playlists by accident
-        'quiet': True,
+        'skip_unavailable_fragments': True, #skip videos that are not available in a country
+        'quiet': False,
         'no_warnings': True,
+        'ignoreerrors': True,#skip errors and continue with the next video
     }
-    try:
-        with yt_dlp.YoutubeDL(options) as ydl:
-            ydl.download([url])
-        print("\nDownload completed successfully!")
-    except Exception as e:
-        print(f"\nError during download: {e}", file=sys.stderr)
-        sys.exit(1)
+    
+    #class to filter yt-dlp output
+    class FilterMessage:
+        def debug(self, msg):
+            filter_message(msg)
+        def info(self, msg):
+            filter_message(msg)
+        def warning(self, msg):
+            filter_message(msg)
+        def error(self, msg):
+            filter_message(msg)
+    
+    options['logger'] = FilterMessage()
+    
+    with yt_dlp.YoutubeDL(options) as ydl:
+        ydl.download([url])
+    
+    print("\nDownload completed!")
 
 def main():
     parser = argparse.ArgumentParser(description="Downloads audio from a YouTube video and converts it to MP3.")
