@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# colors
+if [ -f "$HOME/scripts/colors" ]; then
+    source "$HOME/scripts/colors"
+else
+    C_VERDE=""
+    C_AZUL=""
+    C_AMARILLO=""
+    C_ROJO=""
+    C_RESET=""
+fi
+
+PYTHON_VENV="$HOME/scripts/Python/.venv/bin/python3"
+
+# verify if exists the venv
+if [ ! -f "$PYTHON_VENV" ]; then
+    echo -e "${C_ROJO}[✗] Error: The venv does not exists${C_RESET}"
+    echo -e "${C_AMARILLO}[!] Execute: cd ~/scripts/Python && python3 -m venv .venv${C_RESET}"
+    exit 1
+fi
+
+# install requests
+$PYTHON_VENV -c "import requests" 2>/dev/null || {
+    echo -e "${C_AMARILLO}[!] Installing requests...${C_RESET}"
+    $PYTHON_VENV -m pip install requests
+}
+
+# path to the python file
+$PYTHON_VENV "$HOME/scripts/Python/asistencia.py" "$@"
